@@ -1,0 +1,52 @@
+{
+	"layers": [
+		{
+			"class": "Bitmap",
+			"props": {
+				"source": "https://c1.staticflickr.com/5/4218/35222146015_be1554effa_n.jpg"
+			}
+		},
+		{
+			"class": "Container",
+			"props": {
+				"style": {
+					"width": 120,
+					"height": 40
+				},
+				"children": [
+					{
+						"class": "Layer",
+						"props": {
+							"style": {
+								"width": "100%",
+								"height": "100%",
+								"backgroundColor": "#FF0088"
+							}
+						}
+					},
+					{
+						"class": "Text",
+						"props": {
+							"style": {
+								"color": "#FFF"
+							},
+							"children": [
+								"Hello, world!"
+							]
+						}
+					},
+					{
+						"class": "Vector",
+						"props": {
+							"source": "icon.svg",
+							"style": {
+								"width": 12,
+								"height": 12
+							}
+						}
+					}
+				]
+			}
+		}
+	]
+}

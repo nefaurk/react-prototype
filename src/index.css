@@ -6,6 +6,6 @@ body {
 
 /* Workaround for an issue in ReactSVG (https://github.com/atomic-app/react-svg/issues/24) that was causing the div wrapper to be taller than it shoild be. */
 div {
-  line-height: 0;
-	align-self: center;
+/*  line-height: 0;*/
+/*	align-self: center;*/
 }

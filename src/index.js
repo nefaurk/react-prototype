@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Prototype from './prototype/Prototype';
+import Editor from './editor/Editor';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
-	<Prototype />,
+	<Editor />,
 	document.getElementById("root"),
 );
 registerServiceWorker();
