@@ -1,6 +1,8 @@
 // Libraries
 import React, {Component} from 'react';
 import {StyleSheet, css} from 'aphrodite/no-important';
+// Core
+import Utilities from './Utilities';
 
 export default class Container extends Component {
 	static Orientation = {
@@ -14,7 +16,6 @@ export default class Container extends Component {
 		Stretch: "stretch", // Default
 	}
 	render() {
-		const styleOverrides = this.props.styles;
 		const children = this.props.children;
 		let sizeToFitContents = this.props.sizeToFitContents;
 		if (sizeToFitContents == null) {
@@ -43,35 +44,31 @@ export default class Container extends Component {
 			flexDirection = (orientation == Container.Orientation.Horizontal) ? Container.Orientation.Vertical : Container.Orientation.Horizontal;
 		}
 
-		const styles = StyleSheet.create({
-			container: {
-				display: "flex",
-				alignSelf: (sizeToFitContents) ? "center" : "stretch",
-				flexShrink: (sizeToFitContents) ? 0 : "auto",
-				flexDirection: flexDirection,
-				flexWrap: (wrapContents) ? "wrap" : "nowrap",
-				position: "relative",
-				overflow: "scroll",
-			},
-			horizontal: {
+		const containerStyles = [{
+			display: "flex",
+			alignSelf: (sizeToFitContents) ? "center" : "stretch",
+			flexShrink: (sizeToFitContents) ? 0 : "auto",
+			flexDirection: flexDirection,
+			flexWrap: (wrapContents) ? "wrap" : "nowrap",
+			position: "relative",
+			overflow: "scroll",
+		}];
+		if (orientation == Container.Orientation.Horizontal) {
+			containerStyles.push({
 				height: (sizeToFitContents) ? "auto" : "100%",
 				justifyContent: horizontalAlignment,
 				alignContent: verticalAlignment,
-			},
-			vertical: {
+			});
+		} else {
+			containerStyles.push({
 				width: (sizeToFitContents) ? "auto" : "100%",
 				justifyContent: verticalAlignment,
 				alignContent: horizontalAlignment,
-			},
-		});
-		let combinedStyles = [styles.container];
-		combinedStyles.push((orientation == Container.Orientation.Horizontal) ? styles.horizontal: styles.vertical);
-
-		if (styleOverrides != null) {
-			combinedStyles = combinedStyles.concat(styleOverrides);
+			});
 		}
+
 		return (
-			<div className={css(combinedStyles)}>
+			<div className={Utilities.finalClassNamesForComponent(this, containerStyles)}>
 				{children}
 			</div>
 		);

@@ -1,25 +1,25 @@
 // Libraries
 import React, {Component} from 'react';
 import {StyleSheet, css} from 'aphrodite/no-important';
+// Core
+import Utilities from './Utilities';
 
 export default class Text extends Component {
 	render() {
-		const styleOverrides = this.props.styles;
 		const children = this.props.children;
-		const styles = StyleSheet.create({
-			text: {
-				display: "inline",
-				alignSelf: "center",
-				color: "rgba(0, 0, 0, 1)",
-			},
-		});
-		let combinedStyles = [styles.text];
+		const textStyles = [{
+			display: "inline",
+			alignSelf: "center",
+			fontSize: 16,
+			lineHeight: "1.25em",
+			color: "#000",
+			fontFamily: "SF-UI-Display-Regular, sans-serif",
+		}];
 
-		if (styleOverrides != null) {
-			combinedStyles = combinedStyles.concat(styleOverrides);
-		}
 		return (
-			<span className={css(combinedStyles)}>{children}</span>
+			<span className={Utilities.finalClassNamesForComponent(this, "text", textStyles)}>
+				{children}
+			</span>
 		);
 	}
 }

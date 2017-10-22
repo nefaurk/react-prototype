@@ -49,14 +49,14 @@ export default class Utilities {
 		const styles = this.getEmbeddedStyles(args);
 		return styles;
 	}
-	static combineStylingForComponent(component) {
+	static finalClassNamesForComponent(component) {
 		let argumentsToPass = Array.prototype.splice.call(arguments, 1);
 		argumentsToPass = argumentsToPass.concat(this.getEmbeddedClassNames(component.props.className));
 		argumentsToPass = argumentsToPass.concat(this.getEmbeddedStyles(component.props.style));
 		// console.log("Styling:", argumentsToPass);
-		return this.combineStyling.apply(this, argumentsToPass);
+		return this.finalClassNames.apply(this, argumentsToPass);
 	}
-	static combineStyling() {
+	static finalClassNames() {
 		const args = Array.from(arguments);
 		let classNames = this.getEmbeddedClassNames(args);
 		const styles = this.getEmbeddedStyles(args);
