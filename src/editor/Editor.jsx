@@ -13,7 +13,6 @@ import Vector from '../core/Vector';
 // Layout
 import FixedSpace from '../layout/FixedSpace';
 import FlexibleSpace from '../layout/FlexibleSpace';
-import ToolBar from '../layout/ToolBar';
 
 // Global constants
 const prototypeFolder = "/prototype";
