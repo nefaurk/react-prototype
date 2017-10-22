@@ -1,5 +1,6 @@
 // Libraries
 import React, {Component} from 'react';
+import createClass from 'create-react-class';
 import update from 'immutability-helper';
 import {StyleSheet, css} from 'aphrodite/no-important';
 import $ from 'jquery';
@@ -26,24 +27,56 @@ export default class Editor extends Component {
 		$.getJSON(prototypeFile, function(json) {
 			self.updatePrototypeDef(json)
 		});
+
 		this.state = {
+			componentClasses: this.props.componentClasses,
 			prototypeDef: null,
 		};
 	}
 	updatePrototypeDef(json) {
-		const layers = json.layers;
-		if (layers != null) {
+		if (json != null) {
+			const prototypeDef = json;
+
+			let customComponentClasses = {};
+			if (prototypeDef != null) {
+				const componentsDef = prototypeDef.components;
+				customComponentClasses = this.createCustomComponentClasses(componentsDef);
+			}
+			const componentClasses = Object.assign(this.props.componentClasses, customComponentClasses);
+
 			let state = this.state;
 			state = update(state, {
-				prototypeDef: {$set: layers},
+				componentClasses: {$set: componentClasses},
+				prototypeDef: {$set: prototypeDef},
 			});
 			this.setState(state);
 		}
 	}
+	createCustomComponentClasses(componentsDef) {
+		let customComponents = {};
+		if (componentsDef != null) {
+			for (let className in componentsDef) {
+				const componentDef = componentsDef[className];
+				const rootComponentClass = this.getComponentClass(componentDef.class);
+				if (rootComponentClass == null) {
+					console.log("ERROR: Unable to resolve component class: " + componentDef.class);
+				} else {
+					const children = this.recursivelyGeneratePrototype(componentDef.children);
+					const componentClass = createClass({
+						render: function() {
+							return React.createElement(rootComponentClass, componentDef.props, children);
+						},
+					});
+					customComponents[className] = componentClass;
+				}
+			}
+		}
+		return customComponents;
+	}
 	render() {
 		const prototypeDef = this.state.prototypeDef;
-		const layerTree = this.layerTreeFromPrototypeDef(prototypeDef);
 		const prototype = this.prototypeFromPrototypeDef(prototypeDef);
+		// const layerTree = this.layerTreeFromPrototypeDef(prototypeDef);
 		const containerStyles = {
 			position: "absolute",
 			left: 0,
@@ -61,28 +94,17 @@ export default class Editor extends Component {
 		// 	height: "100%",
 		// }} prototypeDef={prototypeDef} tree={layerTree} changeHandler={this.prototypeDefChangeHandler} />
 	}
-	layerTreeFromPrototypeDef(prototypeDef) {
-		const topLevelLayers = [];
-		if (prototypeDef != null) {
-			for (let componentDef of prototypeDef) {
-				const className = componentDef.class;
-				const layer = {
-					type: className,
-				};
-				if (componentDef.props != null) {
-					if (componentDef.props.children != null) {
-						layer.children = this.layerTreeFromPrototypeDef(componentDef.props.children);
-					}
-				}
-				topLevelLayers.push(layer);
-			}
-		}
-		return topLevelLayers;
-	}
 	prototypeFromPrototypeDef(prototypeDef) {
-		let components = [];
 		if (prototypeDef != null) {
-			for (let componentDef of prototypeDef) {
+			return this.recursivelyGeneratePrototype(prototypeDef.layers);
+		} else {
+			return [];
+		}
+	}
+	recursivelyGeneratePrototype(layerDefs) {
+		let components = [];
+		if (layerDefs != null) {
+			for (let componentDef of layerDefs) {
 				if (componentDef instanceof Object) {
 					const key = Utilities.generateID();
 					let props = componentDef.props;
@@ -97,11 +119,16 @@ export default class Editor extends Component {
 					}
 					let children = [];
 					if (componentDef.props != null && componentDef.props.children != null) {
-						children = this.prototypeFromPrototypeDef(componentDef.props.children);
+						children = this.recursivelyGeneratePrototype(componentDef.props.children);
 					}
+
 					const componentClass = this.getComponentClass(componentDef.class);
-					const component = React.createElement(componentClass, props, children);
-					components.push(component);
+					if (componentClass == null) {
+						console.log("ERROR: Unable to resolve component class: " + componentDef.class);
+					} else {
+						const component = React.createElement(componentClass, props, children);
+						components.push(component);
+					}
 				} else if (componentDef.constructor === String) {
 					components.push(componentDef);
 				}
@@ -119,16 +146,41 @@ export default class Editor extends Component {
 		return path;
 	}
 	getComponentClass(c) {
-		const componentClasses = this.props.componentClasses;
+		const componentClasses = this.state.componentClasses;
 		return componentClasses[c];
 	}
-	prototypeDefChangeHandler(prototypeDef) {
-		let state = this.state;
-		state = update(state, {
-			prototypeDef: {$set: prototypeDef},
-		});
-		this.setState(state);
-	}
+	// layerTreeFromPrototypeDef(prototypeDef) {
+	// 	if (prototypeDef != null) {
+	// 		return this.recursivelyGenerateLayerTree(prototypeDef.layers);
+	// 	} else {
+	// 		return [];
+	// 	}
+	// }
+	// recursivelyGenerateLayerTree(layerDefs) {
+	// 	const topLevelLayers = [];
+	// 	if (layerDefs != null) {
+	// 		for (let componentDef of layerDefs) {
+	// 			const className = componentDef.class;
+	// 			const layer = {
+	// 				type: className,
+	// 			};
+	// 			if (componentDef.props != null) {
+	// 				if (componentDef.props.children != null) {
+	// 					layer.children = this.recursivelyGenerateLayerTree(componentDef.props.children);
+	// 				}
+	// 			}
+	// 			topLevelLayers.push(layer);
+	// 		}
+	// 	}
+	// 	return topLevelLayers;
+	// }
+	// prototypeDefChangeHandler(prototypeDef) {
+	// 	let state = this.state;
+	// 	state = update(state, {
+	// 		prototypeDef: {$set: prototypeDef},
+	// 	});
+	// 	this.setState(state);
+	// }
 }
 Editor.defaultProps = {
 	componentClasses: {
@@ -139,7 +191,7 @@ Editor.defaultProps = {
 		"Vector": Vector,
 		"FlexibleSpace": FlexibleSpace,
 		"FixedSpace": FixedSpace,
-	},
+	}
 };
 
 class LayerTree extends Component {

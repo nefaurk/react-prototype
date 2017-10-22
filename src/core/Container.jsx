@@ -11,15 +11,15 @@ export default class Container extends Component {
 	}
 	static Alignment = {
 		Beginning: "flex-start",
-		Middle: "center",
+		Middle: "center", // Default
 		End: "flex-end",
-		Stretch: "stretch", // Default
+		Stretch: "stretch",
 	}
 	render() {
 		const children = this.props.children;
 		let sizeToFitContents = this.props.sizeToFitContents;
 		if (sizeToFitContents == null) {
-			sizeToFitContents = false;
+			sizeToFitContents = true;
 		}
 		let wrapContents = this.props.wrapContents;
 		if (wrapContents == null) {
@@ -31,11 +31,11 @@ export default class Container extends Component {
 		}
 		let horizontalAlignment = this.props.horizontalAlignment;
 		if (horizontalAlignment == null) {
-			horizontalAlignment = Container.Alignment.Stretch;
+			horizontalAlignment = Container.Alignment.Middle;
 		}
 		let verticalAlignment = this.props.verticalAlignment;
 		if (verticalAlignment == null) {
-			verticalAlignment = Container.Alignment.Stretch;
+			verticalAlignment = Container.Alignment.Middle;
 		}
 
 		// Stupid flexbox...

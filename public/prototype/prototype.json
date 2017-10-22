@@ -1,4 +1,58 @@
 {
+	"components": {
+		"ToolBar": {
+			"class": "Container",
+			"props": {
+				"style": {
+					"height": 60,
+					"paddingLeft": 16,
+					"paddingRight": 16
+				}
+			},
+			"children": [
+				"Placeholder"
+			]
+		},
+		"Button": {
+			"class": "Container",
+			"props": {
+				"style": {
+					"height": 40,
+					"paddingLeft": 16,
+					"paddingRight": 16
+				}
+			},
+			"children": [
+				{
+					"class": "Text",
+					"props": {
+						"style": {
+							"color": "#4788B2"
+						},
+						"children": [
+							"Placeholder"
+						]
+					}
+				},
+				{
+					"class": "FixedSpace",
+					"props": {
+						"size": 16
+					}
+				},
+				{
+					"class": "Vector",
+					"props": {
+						"source": "icon.svg",
+						"style": {
+							"width": 12,
+							"height": 12
+						}
+					}
+				}
+			]
+		}
+	},
 	"layers": [
 		{
 			"class": "Container",
@@ -12,6 +66,7 @@
 					{
 						"class": "Container",
 						"props": {
+							"sizeToFitContents": false,
 							"style": {
 								"height": 60,
 								"paddingLeft": 16,
@@ -33,6 +88,12 @@
 									"class": "FlexibleSpace"
 								},
 								{
+									"class": "Button",
+									"props": {
+										"title": "It worked!"
+									}
+								},
+								{
 									"class": "Layer",
 									"props": {
 										"style": {
@@ -48,7 +109,7 @@
 									"class": "Container",
 									"props": {
 										"style": {
-											"height": 60,
+											"height": 40,
 											"paddingLeft": 16,
 											"paddingRight": 16
 										},
@@ -89,8 +150,7 @@
 					{
 						"class": "Container",
 						"props": {
-							"horizontalAlignment": "center",
-							"verticalAlignment": "center",
+							"sizeToFitContents": false,
 							"children": [
 								{
 									"class": "Layer",
