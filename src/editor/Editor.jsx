@@ -44,17 +44,16 @@ export default class Editor extends Component {
 		const prototypeDef = this.state.prototypeDef;
 		const layerTree = this.layerTreeFromPrototypeDef(prototypeDef);
 		const prototype = this.prototypeFromPrototypeDef(prototypeDef);
+		const containerStyles = {
+			position: "absolute",
+			left: 0,
+			right: 0,
+			top: 0,
+			bottom: 0,
+		};
 		return (
-			<Container style={{
-				position: "absolute",
-				left: 0,
-				right: 0,
-				top: 0,
-				bottom: 0,
-			}}>
-				<Container>
-					{prototype}
-				</Container>
+			<Container style={containerStyles}>
+				{prototype}
 			</Container>
 		);
 		// <LayerTree style={{
@@ -138,6 +137,8 @@ Editor.defaultProps = {
 		"Layer": Layer,
 		"Text": Text,
 		"Vector": Vector,
+		"FlexibleSpace": FlexibleSpace,
+		"FixedSpace": FixedSpace,
 	},
 };
 
