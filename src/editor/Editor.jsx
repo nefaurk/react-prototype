@@ -61,9 +61,10 @@ export default class Editor extends Component {
 				if (rootComponentClass == null) {
 					console.log("ERROR: Unable to resolve component class: " + componentDef.class);
 				} else {
-					const children = this.recursivelyGeneratePrototype(componentDef.children);
+					const self = this;
 					const componentClass = createClass({
 						render: function() {
+							const children = self.recursivelyGeneratePrototype(componentDef.children, true, this.props.children);
 							return React.createElement(rootComponentClass, componentDef.props, children);
 						},
 					});
@@ -96,12 +97,12 @@ export default class Editor extends Component {
 	}
 	prototypeFromPrototypeDef(prototypeDef) {
 		if (prototypeDef != null) {
-			return this.recursivelyGeneratePrototype(prototypeDef.layers);
+			return this.recursivelyGeneratePrototype(prototypeDef.layers, false, null);
 		} else {
 			return [];
 		}
 	}
-	recursivelyGeneratePrototype(layerDefs) {
+	recursivelyGeneratePrototype(layerDefs, isCustomComponent, childrenToInject) {
 		let components = [];
 		if (layerDefs != null) {
 			for (let componentDef of layerDefs) {
@@ -119,15 +120,20 @@ export default class Editor extends Component {
 					}
 					let children = [];
 					if (componentDef.props != null && componentDef.props.children != null) {
-						children = this.recursivelyGeneratePrototype(componentDef.props.children);
+						children = this.recursivelyGeneratePrototype(componentDef.props.children, isCustomComponent, childrenToInject);
 					}
 
-					const componentClass = this.getComponentClass(componentDef.class);
-					if (componentClass == null) {
-						console.log("ERROR: Unable to resolve component class: " + componentDef.class);
+					const componentClassName = componentDef.class;
+					if (isCustomComponent && componentClassName == "ChildrenPlaceholder") {
+						components.push(childrenToInject);
 					} else {
-						const component = React.createElement(componentClass, props, children);
-						components.push(component);
+						const componentClass = this.getComponentClass(componentClassName);
+						if (componentClass == null) {
+							console.log("ERROR: Unable to resolve component class: " + componentDef.class);
+						} else {
+							const component = React.createElement(componentClass, props, children);
+							components.push(component);
+						}
 					}
 				} else if (componentDef.constructor === String) {
 					components.push(componentDef);

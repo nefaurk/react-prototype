@@ -3,6 +3,8 @@
 		"ToolBar": {
 			"class": "Container",
 			"props": {
+				"className": "toolbar",
+				"sizeToFitContents": false,
 				"style": {
 					"height": 60,
 					"paddingLeft": 16,
@@ -10,12 +12,15 @@
 				}
 			},
 			"children": [
-				"Placeholder"
+				{
+					"class": "ChildrenPlaceholder"
+				}
 			]
 		},
 		"Button": {
 			"class": "Container",
 			"props": {
+				"className": "button",
 				"style": {
 					"height": 40,
 					"paddingLeft": 16,
@@ -30,7 +35,9 @@
 							"color": "#4788B2"
 						},
 						"children": [
-							"Placeholder"
+							{
+								"class": "ChildrenPlaceholder"
+							}
 						]
 					}
 				},
@@ -64,14 +71,8 @@
 				},
 				"children": [
 					{
-						"class": "Container",
+						"class": "ToolBar",
 						"props": {
-							"sizeToFitContents": false,
-							"style": {
-								"height": 60,
-								"paddingLeft": 16,
-								"paddingRight": 16
-							},
 							"children": [
 								{
 									"class": "Text",
@@ -86,12 +87,6 @@
 								},
 								{
 									"class": "FlexibleSpace"
-								},
-								{
-									"class": "Button",
-									"props": {
-										"title": "It worked!"
-									}
 								},
 								{
 									"class": "Layer",
