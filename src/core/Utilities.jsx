@@ -1,7 +1,14 @@
 // Libraries
 import {StyleSheet, css} from 'aphrodite/no-important';
 
+let _lastID = 0;
+
 export default class Utilities {
+	static generateID() {
+		const id = _lastID;
+		_lastID++;
+		return id;
+	}
 	static getEmbeddedClassNames(className) {
 		let classNames = [];
 		if (className != null) {
